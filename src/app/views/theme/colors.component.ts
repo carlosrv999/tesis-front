@@ -1,12 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { getStyle, rgbToHex } from '@coreui/coreui/dist/js/coreui-utilities';
+import { ApiService } from './api.service';
 
 @Component({
   templateUrl: 'colors.component.html'
 })
 export class ColorsComponent implements OnInit {
-  constructor(@Inject(DOCUMENT) private _document: any) {}
+  constructor(@Inject(DOCUMENT) private _document: any, private apiService: ApiService) {}
 
   public themeColors(): void {
     Array.from(this._document.querySelectorAll('.theme-color')).forEach((el: HTMLElement) => {
@@ -30,5 +31,11 @@ export class ColorsComponent implements OnInit {
 
   ngOnInit(): void {
     this.themeColors();
+    this.apiService.getConfig().subscribe(
+      (response: any) => {
+        localStorage.setItem('crumb', response.crumb);
+        console.log(response.crumb);
+      }
+    )
   }
 }
